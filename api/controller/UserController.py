@@ -1,18 +1,15 @@
-from flask import request, Request, jsonify
+from flask import request, jsonify
 
 from api.loader import app
-from bot.repository.UserRepository import UserRepository
+from api.repository.UserRepository import UserRepository
 
 
 @app.route('/user', methods=['GET', 'POST'])
 async def user_handler():
-    match request.method:
-
-        case 'GET':
-            return await handle_get()
-
-        case 'POST':
-            return await handle_post()
+    if request.method == 'GET':
+        return await handle_get()
+    if request.method == 'POST':
+        return await handle_post()
 
 
 async def handle_get() -> (any, int):

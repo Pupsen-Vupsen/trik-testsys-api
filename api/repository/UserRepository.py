@@ -1,4 +1,4 @@
-from model.User import User
+from api.model.User import User
 from utils.injector import Repository
 
 

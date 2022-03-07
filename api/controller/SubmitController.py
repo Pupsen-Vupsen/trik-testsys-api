@@ -1,8 +1,8 @@
 from flask import jsonify, request
 
 from api.loader import app
-from bot.repository.SubmitRepository import SubmitRepository
-from bot.repository.UserRepository import UserRepository
+from api.repository.SubmitRepository import SubmitRepository
+from api.repository.UserRepository import UserRepository
 
 
 @app.route('/submit', methods=['GET'])

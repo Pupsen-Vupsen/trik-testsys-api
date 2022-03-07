@@ -1,15 +1,12 @@
 from prettytable import PrettyTable
 
-from bot.repository.TaskRepository import TaskRepository
-from bot.repository.UserRepository import UserRepository
-from model.Submit import Submit
+from api.repository.UserRepository import UserRepository
+from api.model.Submit import Submit
 from utils.injector import Repository
 
 
 @Repository
 class SubmitRepository:
-
-    taskRepository = TaskRepository
     userRepository = UserRepository
 
     @classmethod
@@ -37,37 +34,6 @@ class SubmitRepository:
     @classmethod
     async def get_student_submits_by_task(cls, student_id: str, task_name: str) -> list[Submit]:
         return Submit.select().where((Submit.student_id == student_id) & (Submit.task_name == task_name))
-
-    @classmethod
-    async def get_student_result(cls, student_id: str) -> dict[str, str]:
-        results = {}
-
-        for task in TaskRepository.get_tasks():
-            results[task] = "undef"
-
-        for task in TaskRepository.get_tasks():
-            student_result = await cls.get_student_submits_by_task(student_id, task)
-            status = ""
-            cnt = str(len(student_result))
-
-            for submit in student_result:
-
-                match submit.result:
-                    case "+":
-                        if status in ["", "-", "?"]:
-                            status = "+"
-
-                    case "-":
-                        if status == "":
-                            status = "-"
-
-                    case "?":
-                        if status in ["", "-"]:
-                            status = "?"
-
-            results[task] = status + cnt
-
-        return results
 
     @classmethod
     async def get_student_submits_view(cls, student_id: str, task_name: str) -> PrettyTable:
