@@ -2,3 +2,4 @@ flake8
 flake8-builtins
 flake8-quotes
 flake8-import-order
+pytest~=7.1.2
