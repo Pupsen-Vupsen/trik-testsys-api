@@ -7,5 +7,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
+EXPOSE 5000
 ENV PYTHONPATH="$PYTHONPATH:/api"
 CMD [ "python3", "api/app.py" ]

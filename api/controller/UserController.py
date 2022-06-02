@@ -38,11 +38,24 @@ async def handle_get() -> (any, int):
 
 async def handle_post() -> (any, int):
     user_id = request.args.get('user_id')
+    role = request.args.get('role')
 
     if user_id is None:
         return jsonify(
             code=400,
             message="request must contain user_id arg"
+        ).json, 400
+
+    if role is None:
+        return jsonify(
+            code=400,
+            message="request must contain role arg"
+        ).json, 400
+
+    if role not in ["teacher", "student"]:
+        return jsonify(
+            code=400,
+            message="role must be teacher or student"
         ).json, 400
 
     user = await UserRepository.get_user(user_id)
@@ -51,7 +64,7 @@ async def handle_post() -> (any, int):
         return '', 409
 
     try:
-        await UserRepository.create_user(user_id=user_id, role="student")
+        await UserRepository.create_user(user_id=user_id, role=role)
         return '', 201
     except Exception:
         return jsonify(
