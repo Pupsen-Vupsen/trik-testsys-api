@@ -1,6 +1,5 @@
-import peewee as pw
-
 from api.config import PATH_TO_USERS
+import peewee as pw
 
 
 class User(pw.Model):

@@ -1,6 +1,5 @@
-import peewee as pw
-
 from api.config import PATH_TO_SUBMITS
+import peewee as pw
 
 
 class Submit(pw.Model):

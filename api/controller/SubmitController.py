@@ -1,14 +1,14 @@
-from flask import jsonify, request
+import logging
 
 from api.controller.utils import (
-    error_arg_not_found,
     error_arg_invalid,
+    error_arg_not_found,
     unexpected_error,
 )
 from api.loader import app
 from api.repository.SubmitRepository import SubmitRepository
 from api.repository.UserRepository import UserRepository
-import logging
+from flask import jsonify, request
 
 
 @app.route("/submit", methods=["GET"])
