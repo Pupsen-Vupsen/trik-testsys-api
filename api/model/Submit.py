@@ -8,7 +8,7 @@ class Submit(pw.Model):
     result: pw.CharField = pw.CharField()
 
     class Meta:
-        database: pw.SqliteDatabase = pw.SqliteDatabase("/data/submit.sqlite", pragmas={
-            'journal_mode': 'wal',
-            'synchronous': 'normal'
-        })
+        database: pw.SqliteDatabase = pw.SqliteDatabase(
+            "/data/submit.sqlite",
+            pragmas={"journal_mode": "wal", "synchronous": "normal"},
+        )

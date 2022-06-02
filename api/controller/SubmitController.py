@@ -1,21 +1,25 @@
 from flask import jsonify, request
 
-from api.controller.utils import error_arg_not_found, error_arg_invalid, unexpected_error
+from api.controller.utils import (
+    error_arg_not_found,
+    error_arg_invalid,
+    unexpected_error,
+)
 from api.loader import app
 from api.repository.SubmitRepository import SubmitRepository
 from api.repository.UserRepository import UserRepository
 import logging
 
 
-@app.route('/submit', methods=['GET'])
+@app.route("/submit", methods=["GET"])
 async def handler():
-    user_id = request.args.get('user_id')
+    user_id = request.args.get("user_id")
     if user_id is None:
-        return error_arg_not_found('user_id')
+        return error_arg_not_found("user_id")
 
     user = await UserRepository.get_user(user_id)
     if user is None:
-        return error_arg_invalid('user_id', 'user_id does not exist')
+        return error_arg_invalid("user_id", "user_id does not exist")
 
     try:
         results = await get_user_result(user_id)
@@ -29,16 +33,16 @@ async def get_user_result(user_id: str):
 
     raw_submits = await SubmitRepository.get_student_submits(user_id)
 
-    submits = [jsonify(
-        task_name=submit.task_name,
-        submit_id=submit.submit_id,
-        status=result(str(submit.result))
-    ).json for submit in raw_submits]
+    submits = [
+        jsonify(
+            task_name=submit.task_name,
+            submit_id=submit.submit_id,
+            status=result(str(submit.result)),
+        ).json
+        for submit in raw_submits
+    ]
 
-    return jsonify(
-        user_id=user_id,
-        submits=submits
-    ).json
+    return jsonify(user_id=user_id, submits=submits).json
 
 
 def result(r: str) -> int:
