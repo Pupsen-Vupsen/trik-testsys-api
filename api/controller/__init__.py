@@ -1,2 +1,2 @@
-from . import SubmitController
-from . import UserController
+from . import submit_controller
+from . import user_controller
