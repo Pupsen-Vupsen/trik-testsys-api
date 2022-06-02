@@ -13,3 +13,7 @@ class UserRepository:
     @classmethod
     async def get_user(cls, user_id: str) -> User | None:
         return User.get_or_none(User.user_id == user_id)
+
+    @classmethod
+    def drop_table(cls):
+        User.drop_table()
