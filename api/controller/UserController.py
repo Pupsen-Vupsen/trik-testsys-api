@@ -1,7 +1,9 @@
 from flask import request, jsonify
 
+from api.controller.utils import error_arg_not_found, unexpected_error, error_arg_invalid
 from api.loader import app
 from api.repository.UserRepository import UserRepository
+import logging
 
 
 @app.route('/user', methods=['GET', 'POST'])
@@ -16,10 +18,7 @@ async def handle_get() -> (any, int):
     user_id = request.args.get('user_id')
 
     if user_id is None:
-        return jsonify(
-            code=400,
-            message="request must contain user_id arg"
-        ).json, 400
+        return error_arg_not_found('user_id')
 
     try:
         user = await UserRepository.get_user(user_id)
@@ -29,45 +28,29 @@ async def handle_get() -> (any, int):
         else:
             return jsonify(exist=True), 200
 
-    except Exception:
-        return jsonify(
-            code=500,
-            message="Unexpected error"
-        ).json, 500
+    except Exception as e:
+        logging.log(level=logging.ERROR, msg=e)
+        return unexpected_error
 
 
 async def handle_post() -> (any, int):
     user_id = request.args.get('user_id')
-    role = request.args.get('role')
-
     if user_id is None:
-        return jsonify(
-            code=400,
-            message="request must contain user_id arg"
-        ).json, 400
+        return error_arg_not_found('user_id')
 
+    role = request.args.get('role')
     if role is None:
-        return jsonify(
-            code=400,
-            message="request must contain role arg"
-        ).json, 400
-
+        return error_arg_not_found('role')
     if role not in ["teacher", "student"]:
-        return jsonify(
-            code=400,
-            message="role must be teacher or student"
-        ).json, 400
+        return error_arg_invalid('role', 'role must be teacher or student')
 
     user = await UserRepository.get_user(user_id)
-
     if user is not None:
         return '', 409
 
     try:
         await UserRepository.create_user(user_id=user_id, role=role)
         return '', 201
-    except Exception:
-        return jsonify(
-            code=500,
-            message="Unexpected error"
-        ).json, 500
+    except Exception as e:
+        logging.log(level=logging.ERROR, msg=e)
+        return unexpected_error

@@ -4,7 +4,7 @@ from api.model.Submit import Submit
 class SubmitRepository:
 
     @classmethod
-    def init_repository(cls):
+    def init_repository(cls) -> None:
         Submit.create_table()
 
     @classmethod

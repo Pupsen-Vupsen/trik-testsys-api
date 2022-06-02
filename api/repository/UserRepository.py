@@ -4,7 +4,7 @@ from api.model.User import User
 class UserRepository:
 
     @classmethod
-    def init_repository(cls):
+    def init_repository(cls) -> None:
         User.create_table()
 
     @classmethod

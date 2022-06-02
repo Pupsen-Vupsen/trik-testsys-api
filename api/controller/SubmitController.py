@@ -1,45 +1,38 @@
 from flask import jsonify, request
 
+from api.controller.utils import error_arg_not_found, error_arg_invalid, unexpected_error
 from api.loader import app
 from api.repository.SubmitRepository import SubmitRepository
 from api.repository.UserRepository import UserRepository
+import logging
 
 
 @app.route('/submit', methods=['GET'])
 async def handler():
     user_id = request.args.get('user_id')
-
     if user_id is None:
-        return jsonify(
-            code=400,
-            message="request must contain user_id arg"
-        ).json, 400
+        return error_arg_not_found('user_id')
 
     user = await UserRepository.get_user(user_id)
-
     if user is None:
-        return jsonify(
-            code=400,
-            message=f"user with user_id={user_id} not exist"
-        ), 400
+        return error_arg_invalid('user_id', 'user_id does not exist')
 
     try:
         results = await get_user_result(user_id)
         return results, 200
     except Exception as e:
-        print(e.args)
-        return jsonify(
-            code=500,
-            message="Unexpected error"
-        ).json, 500
+        logging.log(level=logging.ERROR, msg=e)
+        return unexpected_error
 
 
 async def get_user_result(user_id: str):
+
     raw_submits = await SubmitRepository.get_student_submits(user_id)
+
     submits = [jsonify(
         task_name=submit.task_name,
         submit_id=submit.submit_id,
-        status=result(submit.result)
+        status=result(str(submit.result))
     ).json for submit in raw_submits]
 
     return jsonify(
