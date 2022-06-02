@@ -12,13 +12,15 @@ Grading system api for TRIK studio, which allows to create new students and get 
 ### With docker
 1. Build image:
 `docker build .`
-2. Run api:
+2. Edit settings in `config.py` file
+3. Run api:
 `docker run 'your_image_id'`
 
 ### Without docker
 1. Install dependencies:
 `pip3 install -r requirements.txt`
-2. Run api:
+2. Edit settings in `config.py` file 
+3. Run api:
 `python3 main.py`
 
 ## Code Style
